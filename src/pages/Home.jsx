@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import ImageCarousel from "../components/ImageCarousel";
 
 function Home() {
   return (
-    <div>Home</div>
-  )
+    <>
+      <h1>Home</h1>
+
+      <ImageCarousel />
+    </>
+  );
 }
 
-export default Home
+export default Home;

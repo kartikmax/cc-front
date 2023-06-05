@@ -2,7 +2,7 @@ import React from 'react'
 
 function Updates() {
   return (
-    <div>Updates</div>
+    <h1>Updates</h1>
   )
 }
 
