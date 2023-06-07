@@ -12,9 +12,23 @@ import {
   ListItemText,
   ListItemIcon,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import HomeIcon from "@mui/icons-material/Home";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+
+const CustomListItem = ({ to, primary, icon: Icon, onClick }) => (
+  <ListItem component={Link} to={to} onClick={onClick}>
+    <ListItemIcon>
+      <Icon />
+    </ListItemIcon>
+    <ListItemText primary={primary} />
+  </ListItem>
+);
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -56,6 +70,9 @@ const Navbar = () => {
               <Button color="inherit" component={Link} to="/updates">
                 Updates
               </Button>
+              <Button color="inherit" component={Link} to="/voice">
+                Voice Note
+              </Button>
               <Button color="inherit" component={Link} to="/about">
                 About Us
               </Button>
@@ -67,38 +84,36 @@ const Navbar = () => {
       {isMobileView && (
         <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer(false)}>
           <List>
-            <ListItem component={Link} to="/" onClick={toggleDrawer(false)}>
-              <ListItemIcon>
-                <MenuIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem
-              component={Link}
+            <CustomListItem
+              to="/"
+              primary="Home"
+              icon={HomeIcon}
+              onClick={toggleDrawer(false)}
+            />
+            <CustomListItem
               to="/dashboard"
+              primary="Dashboard"
+              icon={DashboardIcon}
               onClick={toggleDrawer(false)}
-            >
-              <ListItemIcon>
-                <MenuIcon />
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-            </ListItem>
-            <ListItem
-              component={Link}
+            />
+            <CustomListItem
               to="/updates"
+              primary="Updates"
+              icon={NotificationsActiveIcon}
               onClick={toggleDrawer(false)}
-            >
-              <ListItemIcon>
-                <MenuIcon />
-              </ListItemIcon>
-              <ListItemText primary="Updates" />
-            </ListItem>
-            <ListItem component={Link} to="/about" onClick={toggleDrawer(false)}>
-              <ListItemIcon>
-                <MenuIcon />
-              </ListItemIcon>
-              <ListItemText primary="About Us" />
-            </ListItem>
+            />
+            <CustomListItem
+              to="/voice"
+              primary="Voice Note"
+              icon={RecordVoiceOverIcon}
+              onClick={toggleDrawer(false)}
+            />
+            <CustomListItem
+              to="/about"
+              primary="About Us"
+              icon={EmojiEmotionsIcon}
+              onClick={toggleDrawer(false)}
+            />
           </List>
         </Drawer>
       )}
