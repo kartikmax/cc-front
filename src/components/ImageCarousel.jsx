@@ -3,12 +3,17 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Blastoise from "../assets/blastoise.jpg";
+import Caterpie from "../assets/caterpie.jpg";
+import Wartortle from "../assets/wartortle.jpg";
+import Venusaur from "../assets/venusaur.jpg";
+import Squirtle from "../assets/squirtle.jpg";
+import Charmaleon from "../assets/charmeleon.jpg";
 
-function ImgCard() {
+function ImgCard({ image, text, height, width }) {
   return (
     <div className="card" style={{ margin: "20px" }}>
-      <h3>this is card</h3>
-      <img src={Blastoise} alt="blastoise" />
+      <h3>{text}</h3>
+      <img src={image} alt={text} style={{ height, width }} />
     </div>
   );
 }
@@ -23,6 +28,7 @@ function Arrow(props) {
     />
   );
 }
+// Rest of the code...
 
 function ImageCarousel() {
   const settings = {
@@ -61,18 +67,48 @@ function ImageCarousel() {
       },
     ],
   };
+
   return (
     <div style={{ padding: "30px", margin: "20px" }}>
       <h2> Single Item</h2>
       <Slider {...settings}>
-        <ImgCard />
-        <ImgCard />
-        <ImgCard />
-        <ImgCard />
-        <ImgCard />
-        <ImgCard />
-        <ImgCard />
-        <ImgCard />
+        <ImgCard
+          image={Blastoise}
+          text="Blastoise"
+          // height="300px"
+          // width="300px"
+        />
+        <ImgCard
+          image={Caterpie}
+          text="Caterpie"
+          // height="200px"
+          // width="200px"
+        />
+        <ImgCard
+          image={Squirtle}
+          text="Blastoise"
+          // height="300px"
+          // width="300px"
+        />
+        <ImgCard
+          image={Charmaleon}
+          text="Caterpie"
+          // height="200px"
+          // width="200px"
+        />
+        <ImgCard
+          image={Wartortle}
+          text="Blastoise"
+          // height="300px"
+          // width="300px"
+        />
+        <ImgCard
+          image={Venusaur}
+          text="Caterpie"
+          // height="200px"
+          // width="200px"
+        />
+        {/* Add more ImgCard components with different images as props */}
       </Slider>
     </div>
   );
