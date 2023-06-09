@@ -1,43 +1,64 @@
-import React, { useState } from "react";
-import { Button, Grid, Paper, Typography } from "@mui/material";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase-config";
 
 const VoiceNote = () => {
   const [todos, setTodos] = useState([]);
 
+  const transcriptCollection = collection(db, "transcript");
+
   const { transcript, resetTranscript } = useSpeechRecognition({
     continuous: true,
   });
+
+  useEffect(() => {
+    const fetchTranscripts = async () => {
+      try {
+        const querySnapshot = await getDocs(transcriptCollection);
+        const transcripts = [];
+        querySnapshot.forEach((doc) => {
+          transcripts.push({ id: doc.id, transcript_text: doc.data().transcript_text });
+        });
+        setTodos(transcripts);
+      } catch (error) {
+        console.error("Error fetching transcripts:", error);
+      }
+    };
+
+    fetchTranscripts();
+  }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     return null;
   }
 
   const handleSave = async () => {
-    
-    const newTodo = {
-      id: response.data.id,
-      title: transcript,
-    };
-    setTodos([...todos, newTodo]);
-    resetTranscript();
-   
+    try {
+      const docRef = await addDoc(transcriptCollection, {
+        transcript_text: transcript,
+      });
+
+      const newTodo = {
+        id: docRef.id,
+        transcript_text: transcript,
+      };
+
+      setTodos([...todos, newTodo]);
+      resetTranscript();
+    } catch (error) {
+      console.error("Error saving transcript:", error);
+    }
   };
 
   return (
     <div style={{ overflowX: "hidden" }}>
-      <Grid
-        container
-        spacing={2}
-        sx={{ margin: "32px 0", overflow: "auto", maxHeight: "100%" }}
-      >
+      <Grid container spacing={2} sx={{ margin: "32px 0", overflow: "auto", maxHeight: "100%" }}>
         {todos.map((todo) => (
           <Grid item xs={12} sm={6} md={4} key={todo.id}>
             <Paper elevation={3} sx={{ padding: "16px", overflow: "auto" }}>
-              <Typography variant="h6">{todo.title}</Typography>
+              <Typography variant="h6">{todo.transcript_text}</Typography>
             </Paper>
           </Grid>
         ))}
@@ -73,6 +94,24 @@ const VoiceNote = () => {
           {transcript}
         </Typography>
       </Paper>
+      <TableContainer component={Paper} sx={{ width: "90%", margin: "16px" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Transcript</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {todos.map((todo) => (
+              <TableRow key={todo.id}>
+                <TableCell>{todo.id}</TableCell>
+                <TableCell>{todo.transcript_text}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

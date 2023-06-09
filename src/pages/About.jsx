@@ -10,7 +10,7 @@ function About() {
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(usersCollectionRef);
-      console.log(data);
+      // console.log(data);
       setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getUsers();
@@ -19,7 +19,7 @@ function About() {
 
   return (
     <>
-      <div>About</div>
+      <h2>About</h2>
       <ListRender
         data={users}
         setData={setUsers}

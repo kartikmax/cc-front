@@ -12,7 +12,7 @@ import {
   Typography,
   FormControl,
 } from "@mui/material";
-import { addDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
 const CustomDialog = ({
   modalType,
@@ -32,14 +32,12 @@ const CustomDialog = ({
   };
 
   const createUser = async () => {
-    // setFormValues({})
     await addDoc(usersCollectionRef, formValues);
     const updatedData = await getDocs(usersCollectionRef);
     setData(updatedData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   const deleteUser = async (id) => {
-    console.log(id);
     try {
       await deleteDoc(doc(usersCollectionRef, id));
       setData((prevData) => prevData.filter((user) => user.id !== id));
@@ -48,14 +46,28 @@ const CustomDialog = ({
     }
   };
 
+  const updateUser = async (id) => {
+    try {
+      const userRef = doc(usersCollectionRef, id);
+      await updateDoc(userRef, formValues);
+      const updatedData = await getDocs(usersCollectionRef);
+      setData(updatedData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    } catch (error) {
+      console.error("Error updating user: ", error);
+    }
+  };
+  
+
   useEffect(() => {
     if (data && id) {
       const selectedData = data.find((item) => item.id === id);
       if (selectedData) {
         setFormValues(selectedData);
       }
+    } else if (modalType === "add") {
+      setFormValues({}); // Clear form values when modalType is "add"
     }
-  }, [data, id]);
+  }, [data, id, modalType]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -64,19 +76,18 @@ const CustomDialog = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     if (modalType === "update") {
-      await updateUser(formValues, id);
+      await updateUser(id);
     } else if (modalType === "delete") {
       await deleteUser(id);
     } else if (modalType === "add") {
-      setFormValues({});
       await createUser();
     }
-
+  
     handleClose();
-    // console.log(formValues, id, "this data");
   };
+  
 
   return (
     <Dialog open={open} onClose={handleClose}>

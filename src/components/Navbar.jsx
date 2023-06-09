@@ -10,6 +10,8 @@ import {
   List,
   useMediaQuery,
   useTheme,
+  Box,
+  styled,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -18,7 +20,15 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import { CustomListItem } from "./CustomListItem";
+import Logo from "../assets/vite.svg";
 
+// Styling for the drawer
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  "& .MuiDrawer-paper": {
+    backgroundColor: "#f5f5f5",
+    width: "240px",
+  },
+}));
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -43,7 +53,7 @@ const Navbar = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Drawer
+            <StyledDrawer
               anchor="left"
               open={isDrawerOpen}
               onClose={toggleDrawer(false)}
@@ -80,28 +90,51 @@ const Navbar = () => {
                   onClick={toggleDrawer(false)}
                 />
               </List>
-            </Drawer>
+            </StyledDrawer>
+            <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+              <img
+                src={Logo}
+                alt="Logo"
+                height="20px"
+                width="20px"
+                style={{ marginRight: "8px" }}
+              />
+              <Typography variant="h6" component="div">
+                Uni - Connect
+              </Typography>
+            </Box>
           </>
         ) : (
           <>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Uni - Connect
-            </Typography>
-            <Button color="inherit" component={Link} to="/">
-              Home
-            </Button>
-            <Button color="inherit" component={Link} to="/dashboard">
-              Dashboard
-            </Button>
-            <Button color="inherit" component={Link} to="/updates">
-              Updates
-            </Button>
-            <Button color="inherit" component={Link} to="/voice">
-              Voice Note
-            </Button>
-            <Button color="inherit" component={Link} to="/about">
-              About Us
-            </Button>
+            <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+              <img
+                src={Logo}
+                alt="Logo"
+                height="20px"
+                width="20px"
+                style={{ marginRight: "8px" }}
+              />
+              <Typography variant="h6" component="div">
+                Uni - Connect
+              </Typography>
+            </Box>
+            <Box>
+              <Button color="inherit" component={Link} to="/">
+                Home
+              </Button>
+              <Button color="inherit" component={Link} to="/dashboard">
+                Dashboard
+              </Button>
+              <Button color="inherit" component={Link} to="/updates">
+                Updates
+              </Button>
+              <Button color="inherit" component={Link} to="/voice">
+                Voice Note
+              </Button>
+              <Button color="inherit" component={Link} to="/about">
+                About Us
+              </Button>
+            </Box>
           </>
         )}
       </Toolbar>

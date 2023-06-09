@@ -19,6 +19,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import axios from "axios";
 import CustomDialog from "./CustomDialog";
+import "./ListRender.css";
 
 const ListRender = ({ type, data, setData, usersCollectionRef }) => {
   const [delModal, setDelModal] = useState(false);
@@ -27,15 +28,9 @@ const ListRender = ({ type, data, setData, usersCollectionRef }) => {
   const [modal, setModal] = useState(false);
   const [addModal, setAddModal] = useState(false); // New state for addModal
   const [fieldsName, setFieldsName] = useState([]);
-  const [open, setOpen] = useState(false);
-
-  // const []
 
   const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+    setAddModal(true);
   };
 
   useEffect(() => {
@@ -68,17 +63,12 @@ const ListRender = ({ type, data, setData, usersCollectionRef }) => {
     }
   }
 
-  // console.log(data[0].id)
-
   return (
     <>
-      <Button
-        onClick={() => setAddModal(true)} // Set addModal to true on button click
-        variant="contained"
-        color="primary"
-      >
+      <Button onClick={handleOpen} variant="contained" color="primary">
         Add Users
       </Button>
+      <div style={{margin:"5px"}}/>
 
       {(modal || delModal || addModal) && ( // Add the condition for addModal
         <CustomDialog
@@ -95,9 +85,9 @@ const ListRender = ({ type, data, setData, usersCollectionRef }) => {
       {data.length > 0 ? (
         <TableContainer component={Paper}>
           <Table>
-            <TableHead>
+            <TableHead className="lead-header">
               <TableRow className="#">
-                <TableCell align="center">
+                <TableCell align="center" className="lead-header">
                   Serial No.
                 </TableCell>
                 {fieldsName.map((field) => (
@@ -106,13 +96,22 @@ const ListRender = ({ type, data, setData, usersCollectionRef }) => {
                   </TableCell>
                 ))}
                 {type !== "img" && (
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell align="center" className="lead-header">
+                    Actions
+                  </TableCell>
                 )}
               </TableRow>
             </TableHead>
             <TableBody>
               {data.map((student, i) => (
-                <TableRow key={i} className="lead-table-contents">
+                <TableRow
+                  key={i}
+                  className={
+                    i % 2 === 0
+                      ? "lead-table-contents-light-gray"
+                      : "lead-table-contents-light-blue"
+                  } // Add class names for alternating row colors
+                >
                   <TableCell align="center">
                     {type === "img" ? (
                       <AccountCircleIcon fontSize="large" />
