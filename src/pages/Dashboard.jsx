@@ -103,7 +103,6 @@ function Dashboard() {
   };
   // console.log(allStudentsData)
 
-
   return (
     <>
       <Typography variant="h3" align="center">
@@ -119,21 +118,19 @@ function Dashboard() {
       </Grid>
       <Grid container>
         <Grid item xs={12} md={8}>
-          <BarChart  allStudentsData={allStudentsData}/>
+          <BarChart allStudentsData={allStudentsData} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <DoughnutChart />
+          <DoughnutChart allStudentsData={allStudentsData} />
         </Grid>
       </Grid>
-      <Typography variant="h5" align="center">
-        Progress Part 2
-      </Typography>
+
       <Grid container>
         <Grid item xs={12} md={4}>
           <RadarChart />
         </Grid>
         <Grid item xs={12} md={8}>
-          <LineChart />
+          <LineChart allStudentsData={allStudentsData} />
         </Grid>
       </Grid>
 

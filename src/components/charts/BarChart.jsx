@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -33,22 +33,18 @@ export const options = {
 };
 
 export function BarChart({ allStudentsData }) {
-  const [labels, setLabels] = useState([
-    "John",
-    "Harry",
-    "Ram",
-    "Kartik",
-    "Shyam",
-  ]);
+  const [labels, setLabels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(allStudentsData)
-    setLabels(allStudentsData.map((data)=>data.name))
-  }, [allStudentsData])
-  
+    if (allStudentsData) {
+      setLabels(allStudentsData.map((data) => data.name));
+      setLoading(false);
+    }
+  }, [allStudentsData]);
 
   const data = {
-    labels: labels,
+    labels,
     datasets: [
       {
         label: "Previous Marks",
@@ -63,11 +59,9 @@ export function BarChart({ allStudentsData }) {
     ],
   };
 
-  console.log(JSON.stringify(allStudentsData));
-
   return (
     <div style={{ height: "400px", width: "100%" }}>
-      <Bar options={options} data={data} />
+      {loading ? <p>Loading...</p> : <Bar options={options} data={data} />}
     </div>
   );
 }

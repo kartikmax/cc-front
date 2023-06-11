@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Typography } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export function DoughnutChart() {
-  const labels = ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"];
+export function DoughnutChart({ allStudentsData }) {
+  const [labels, setLabels] = useState([
+    "John",
+    "Harry",
+    "Ram",
+    "Kartik",
+    "Shyam",
+  ]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (allStudentsData) {
+      setLabels(allStudentsData.map((data) => data.name));
+      setIsLoading(false);
+    }
+  }, [allStudentsData]);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
+        label: "Total Percentage",
+        data: allStudentsData
+          ? allStudentsData.map((student) => student.curPercentage)
+          : [],
         backgroundColor: [
           "rgba(255, 99, 132, 0.5)",
           "rgba(54, 162, 235, 0.5)",
@@ -37,10 +53,18 @@ export function DoughnutChart() {
 
   return (
     <div style={{ height: "400px", width: "100%" }}>
-      <Typography variant="subtitle1" align="center">
-        All students{" "}
-      </Typography>
-      <Doughnut data={data} />
+      {isLoading ? (
+        <Typography variant="subtitle1" align="center">
+          Loading...
+        </Typography>
+      ) : (
+        <>
+          <Typography variant="subtitle1" align="center">
+            All students
+          </Typography>
+          <Doughnut data={data} />
+        </>
+      )}
     </div>
   );
 }
