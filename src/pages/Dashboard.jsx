@@ -99,8 +99,10 @@ function Dashboard() {
   const handleSave = () => {
     saveStudentMarks();
     handleDialogClose();
-    console.log(studentData);
+    // console.log(studentData);
   };
+  // console.log(allStudentsData)
+
 
   return (
     <>
@@ -117,14 +119,14 @@ function Dashboard() {
       </Grid>
       <Grid container>
         <Grid item xs={12} md={8}>
-          <BarChart />
+          <BarChart  allStudentsData={allStudentsData}/>
         </Grid>
         <Grid item xs={12} md={4}>
           <DoughnutChart />
         </Grid>
       </Grid>
       <Typography variant="h5" align="center">
-        Progress part 2
+        Progress Part 2
       </Typography>
       <Grid container>
         <Grid item xs={12} md={4}>

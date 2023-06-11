@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -27,36 +27,46 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Chart.js Bar Chart",
+      text: "All students performance Marks",
     },
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+export function BarChart({ allStudentsData }) {
+  const [labels, setLabels] = useState([
+    "John",
+    "Harry",
+    "Ram",
+    "Kartik",
+    "Shyam",
+  ]);
 
-const generateRandomData = () => {
-  return labels.map(() => Math.floor(Math.random() * 1000));
-};
+  useEffect(() => {
+    if(allStudentsData)
+    setLabels(allStudentsData.map((data)=>data.name))
+  }, [allStudentsData])
+  
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: generateRandomData(),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: generateRandomData(),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Previous Marks",
+        data: allStudentsData.map((student) => student.prevMarks),
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+      },
+      {
+        label: "Current Marks",
+        data: allStudentsData.map((student) => student.curMarks),
+        backgroundColor: "rgba(53, 162, 235, 0.8)",
+      },
+    ],
+  };
 
-export function BarChart() {
+  console.log(JSON.stringify(allStudentsData));
+
   return (
-    <div style={{height:"400px",width:"100%"}}>
+    <div style={{ height: "400px", width: "100%" }}>
       <Bar options={options} data={data} />
     </div>
   );
