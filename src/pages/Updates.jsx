@@ -21,6 +21,8 @@ function Updates() {
   const [quotes, setQuotes] = useState([]);
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrls, setImageUrls] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [open, setOpen] = useState({
     open: false,
     position: { vertical: "top", horizontal: "right" },
@@ -69,9 +71,12 @@ function Updates() {
       const data = await response.json();
       const selectedQuotes = data.slice(0, uniqueUrls.length);
       setQuotes(selectedQuotes);
+      setLoading(false);
     };
 
-    fetchQuotes();
+    if (imageUrls.length > 0) {
+      fetchQuotes();
+    }
   }, [imageUrls]);
 
   const getCaption = (index) => {
@@ -120,52 +125,56 @@ function Updates() {
           Here the image is uploaded
         </Alert>
       </Snackbar>
-      <Grid container spacing={2.15}>
-        {imageUrls.map((item, index) => (
-          <Grid item xs={12} sm={4} key={index}>
-            <Paper
-              elevation={3}
-              sx={{
-                p: 2,
-                margin: "auto",
-                maxWidth: 500,
-                flexGrow: 1,
-                backgroundColor: "#fffde4",
-              }}
-            >
-              <Grid container spacing={2}>
-                <Grid item>
-                  <ButtonBase sx={{ width: 128, height: 128 }}>
-                    <Img alt="complex" src={item.url} />
-                  </ButtonBase>
-                </Grid>
-                <Grid item xs container direction="column" spacing={2}>
-                  <Grid item xs>
-                    <Typography
-                      gutterBottom
-                      variant="subtitle1"
-                      component="div"
-                    >
-                      Image sent
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      {getCaption(index)}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      #instagood #instamood
-                    </Typography>
-                  </Grid>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <Grid container spacing={2.15}>
+          {imageUrls.map((item, index) => (
+            <Grid item xs={12} sm={4} key={index}>
+              <Paper
+                elevation={3}
+                sx={{
+                  p: 2,
+                  margin: "auto",
+                  maxWidth: 500,
+                  flexGrow: 1,
+                  backgroundColor: "#fffde4",
+                }}
+              >
+                <Grid container spacing={2}>
                   <Grid item>
-                    <Typography variant="caption">
-                      {getTimeElapsed(item.uploadedAt)}
-                    </Typography>
+                    <ButtonBase sx={{ width: 128, height: 128 }}>
+                      <Img alt="complex" src={item.url} />
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs container direction="column" spacing={2}>
+                    <Grid item xs>
+                      <Typography
+                        gutterBottom
+                        variant="subtitle1"
+                        component="div"
+                      >
+                        Image sent
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {getCaption(index)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        #instagood #instamood
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="caption">
+                        {getTimeElapsed(item.uploadedAt)}
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 }
