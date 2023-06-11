@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Grid,
@@ -13,21 +13,25 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from '@mui/material';
+} from "@mui/material";
 
-import { BarChart } from '../components/charts/BarChart';
-import { DoughnutChart } from '../components/charts/DoughnutChart';
-import { LineChart } from '../components/charts/LineChart';
-import { RadarChart } from '../components/charts/RadarChart';
+import { BarChart } from "../components/charts/BarChart";
+import { DoughnutChart } from "../components/charts/DoughnutChart";
+import { LineChart } from "../components/charts/LineChart";
+import { RadarChart } from "../components/charts/RadarChart";
 
 function Dashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [studentData, setStudentData] = useState({
-    name: '',
-    marks: '',
-    percentage: 0,
-    cgpa: '',
-    semester: '',
+    name: "",
+    prevMarks: "",
+    prevPercentage: 0,
+    prevSgpa: "",
+    prevSemester: "",
+    curMarks: "",
+    curPercentage: 0,
+    curSgpa: "",
+    curSemester: "",
   });
 
   const handleDialogOpen = () => {
@@ -46,17 +50,23 @@ function Dashboard() {
     }));
   };
 
-  const handlePercentageChange = (event, value) => {
+  const handlePrevPercentageChange = (event, value) => {
     setStudentData((prevData) => ({
       ...prevData,
-      percentage: value,
+      prevPercentage: value,
+    }));
+  };
+
+  const handleCurPercentageChange = (event, value) => {
+    setStudentData((prevData) => ({
+      ...prevData,
+      curPercentage: value,
     }));
   };
 
   const handleSave = () => {
-    // Perform save logic using the studentData state
-    console.log(studentData);
     handleDialogClose();
+    console.log(studentData);
   };
 
   return (
@@ -65,7 +75,7 @@ function Dashboard() {
         Dashboard
       </Typography>
       <Typography variant="h5" align="center">
-        another progress part 1
+        Progress Part 1
       </Typography>
       <Grid container justifyContent="center">
         <Button variant="contained" onClick={handleDialogOpen}>
@@ -81,7 +91,7 @@ function Dashboard() {
         </Grid>
       </Grid>
       <Typography variant="h5" align="center">
-        another progress part 2
+        Progress part 2
       </Typography>
       <Grid container>
         <Grid item xs={12} md={4}>
@@ -105,47 +115,107 @@ function Dashboard() {
                 onChange={handleInputChange}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1">Previous Marks</Typography>
+            </Grid>
             <Grid item xs={12} md={6}>
               <TextField
                 label="Marks"
                 fullWidth
-                name="marks"
-                value={studentData.marks}
+                name="prevMarks"
+                value={studentData.prevMarks}
                 onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography id="percentage-slider" gutterBottom>
-                Percentage
+              <Typography id="prev-percentage-slider" gutterBottom>
+                Previous Percentage
               </Typography>
               <Slider
-                aria-labelledby="percentage-slider"
+                aria-labelledby="prev-percentage-slider"
                 valueLabelDisplay="auto"
                 step={1}
                 marks
                 min={0}
                 max={100}
-                value={studentData.percentage}
-                onChange={handlePercentageChange}
+                value={studentData.prevPercentage}
+                onChange={handlePrevPercentageChange}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
-                label="CGPA"
+                label="SGPA"
                 fullWidth
-                name="cgpa"
-                value={studentData.cgpa}
+                name="prevSgpa"
+                value={studentData.prevSgpa}
                 onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="semester-label">Semester</InputLabel>
+                <InputLabel id="prev-semester-label">Semester</InputLabel>
                 <Select
-                  labelId="semester-label"
-                  id="semester-select"
-                  value={studentData.semester}
-                  name="semester"
+                  labelId="prev-semester-label"
+                  id="prev-semester-select"
+                  value={studentData.prevSemester}
+                  name="prevSemester"
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value={1}>Semester 1</MenuItem>
+                  <MenuItem value={2}>Semester 2</MenuItem>
+                  <MenuItem value={3}>Semester 3</MenuItem>
+                  <MenuItem value={4}>Semester 4</MenuItem>
+                  <MenuItem value={5}>Semester 5</MenuItem>
+                  <MenuItem value={6}>Semester 6</MenuItem>
+                  {/* Add more semesters as needed */}
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* current marks */}
+            <Grid item xs={12}>
+              <Typography variant="body1">Current Marks</Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Marks"
+                fullWidth
+                name="curMarks"
+                value={studentData.curMarks}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography id="cur-percentage-slider" gutterBottom>
+                Current Percentage
+              </Typography>
+              <Slider
+                aria-labelledby="cur-percentage-slider"
+                valueLabelDisplay="auto"
+                step={1}
+                marks
+                min={0}
+                max={100}
+                value={studentData.curPercentage}
+                onChange={handleCurPercentageChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="SGPA"
+                fullWidth
+                name="curSgpa"
+                value={studentData.curSgpa}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel id="cur-semester-label">Semester</InputLabel>
+                <Select
+                  labelId="cur-semester-label"
+                  id="cur-semester-select"
+                  value={studentData.curSemester}
+                  name="curSemester"
                   onChange={handleInputChange}
                 >
                   <MenuItem value={1}>Semester 1</MenuItem>

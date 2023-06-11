@@ -6,7 +6,13 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import { storage } from "../firebase-config";
-import { Button, Input, Snackbar, Alert } from "@mui/material";
+import {
+  Button,
+  Input,
+  Snackbar,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { v4 } from "uuid";
 import { formatDistanceToNow } from "date-fns";
 
@@ -21,12 +27,11 @@ function Updates() {
   const [quotes, setQuotes] = useState([]);
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrls, setImageUrls] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [open, setOpen] = useState({
     open: false,
     position: { vertical: "top", horizontal: "right" },
   });
+  const [loading, setLoading] = useState(true);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -53,15 +58,19 @@ function Updates() {
   };
 
   useEffect(() => {
-    listAll(imagesListRef).then((response) => {
-      const urls = [];
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          urls.push({ url, uploadedAt: new Date() });
-        });
-      });
-      setImageUrls(urls);
-    });
+    const fetchImageUrls = async () => {
+      const response = await listAll(imagesListRef);
+      const promises = response.items.map((item) => getDownloadURL(item));
+      const urls = await Promise.all(promises);
+      const imageUrlsWithTimestamp = urls.map((url) => ({
+        url,
+        uploadedAt: new Date(),
+      }));
+      setImageUrls(imageUrlsWithTimestamp);
+      setLoading(false);
+    };
+
+    fetchImageUrls();
   }, []);
 
   useEffect(() => {
@@ -71,7 +80,6 @@ function Updates() {
       const data = await response.json();
       const selectedQuotes = data.slice(0, uniqueUrls.length);
       setQuotes(selectedQuotes);
-      setLoading(false);
     };
 
     if (imageUrls.length > 0) {
@@ -93,6 +101,20 @@ function Updates() {
   const getTimeElapsed = (uploadedAt) => {
     return formatDistanceToNow(uploadedAt, { addSuffix: true });
   };
+
+  if (loading) {
+    return (
+      <>
+        <h1>Image Gallery</h1>
+        <Grid
+          container
+          justifyContent="center"
+        >
+          <CircularProgress color="success" />
+        </Grid>
+      </>
+    );
+  }
 
   return (
     <>
@@ -125,9 +147,7 @@ function Updates() {
           Here the image is uploaded
         </Alert>
       </Snackbar>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
+      {imageUrls.length > 0 ? (
         <Grid container spacing={2.15}>
           {imageUrls.map((item, index) => (
             <Grid item xs={12} sm={4} key={index}>
@@ -154,7 +174,7 @@ function Updates() {
                         variant="subtitle1"
                         component="div"
                       >
-                        Image sent
+                        {/* Image sent */}
                       </Typography>
                       <Typography variant="body2" gutterBottom>
                         {getCaption(index)}
@@ -174,6 +194,8 @@ function Updates() {
             </Grid>
           ))}
         </Grid>
+      ) : (
+        <Typography variant="body2">No images available</Typography>
       )}
     </>
   );
