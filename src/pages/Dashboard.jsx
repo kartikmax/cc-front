@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Grid,
@@ -14,7 +14,8 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-
+import { db } from "../firebase-config";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import { BarChart } from "../components/charts/BarChart";
 import { DoughnutChart } from "../components/charts/DoughnutChart";
 import { LineChart } from "../components/charts/LineChart";
@@ -22,16 +23,18 @@ import { RadarChart } from "../components/charts/RadarChart";
 
 function Dashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [allStudentsData, setAllStudentsData] = useState([]);
+  const usersCollectionRef = collection(db, "studentData");
   const [studentData, setStudentData] = useState({
     name: "",
-    prevMarks: "",
+    prevMarks: 0,
     prevPercentage: 0,
-    prevSgpa: "",
-    prevSemester: "",
-    curMarks: "",
+    prevSgpa: 0,
+    prevSemester: 1,
+    curMarks: 0,
     curPercentage: 0,
-    curSgpa: "",
-    curSemester: "",
+    curSgpa: 0,
+    curSemester: 2,
   });
 
   const handleDialogOpen = () => {
@@ -40,6 +43,35 @@ function Dashboard() {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+  };
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await getDocs(usersCollectionRef);
+      setAllStudentsData(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    };
+    getUsers();
+  }, []);
+
+  const saveStudentMarks = async () => {
+    const parsedStudentData = {
+      ...studentData,
+      prevMarks: parseInt(studentData.prevMarks),
+      prevPercentage: parseInt(studentData.prevPercentage),
+      prevSgpa: parseFloat(studentData.prevSgpa),
+      curMarks: parseInt(studentData.curMarks),
+      curPercentage: parseInt(studentData.curPercentage),
+      curSgpa: parseFloat(studentData.curSgpa),
+      curSemester: parseInt(studentData.curSemester),
+    };
+
+    await addDoc(usersCollectionRef, parsedStudentData);
+    const updatedData = await getDocs(usersCollectionRef);
+    setAllStudentsData(
+      updatedData.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
   };
 
   const handleInputChange = (event) => {
@@ -65,6 +97,7 @@ function Dashboard() {
   };
 
   const handleSave = () => {
+    saveStudentMarks();
     handleDialogClose();
     console.log(studentData);
   };
@@ -167,11 +200,9 @@ function Dashboard() {
                   <MenuItem value={4}>Semester 4</MenuItem>
                   <MenuItem value={5}>Semester 5</MenuItem>
                   <MenuItem value={6}>Semester 6</MenuItem>
-                  {/* Add more semesters as needed */}
                 </Select>
               </FormControl>
             </Grid>
-            {/* current marks */}
             <Grid item xs={12}>
               <Typography variant="body1">Current Marks</Typography>
             </Grid>
@@ -224,7 +255,6 @@ function Dashboard() {
                   <MenuItem value={4}>Semester 4</MenuItem>
                   <MenuItem value={5}>Semester 5</MenuItem>
                   <MenuItem value={6}>Semester 6</MenuItem>
-                  {/* Add more semesters as needed */}
                 </Select>
               </FormControl>
             </Grid>

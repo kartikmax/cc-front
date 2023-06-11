@@ -63,6 +63,8 @@ const ListRender = ({ type, data, setData, usersCollectionRef }) => {
     }
   }
 
+  console.log(data)
+
   return (
     <>
       <Button onClick={handleOpen} variant="contained" color="primary">
