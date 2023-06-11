@@ -1,8 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import {
+  Button,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
+
+const getRandomColor = () => {
+  const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  return color;
+};
 
 const VoiceNote = () => {
   const [todos, setTodos] = useState([]);
@@ -19,7 +37,10 @@ const VoiceNote = () => {
         const querySnapshot = await getDocs(transcriptCollection);
         const transcripts = [];
         querySnapshot.forEach((doc) => {
-          transcripts.push({ id: doc.id, transcript_text: doc.data().transcript_text });
+          transcripts.push({
+            id: doc.id,
+            transcript_text: doc.data().transcript_text,
+          });
         });
         setTodos(transcripts);
       } catch (error) {
@@ -54,10 +75,22 @@ const VoiceNote = () => {
 
   return (
     <div style={{ overflowX: "hidden" }}>
-      <Grid container spacing={2} sx={{ margin: "32px 0", overflow: "auto", maxHeight: "100%" }}>
+      <Typography variant="h4"> Previous Transcripts</Typography>
+      <Grid
+        container
+        spacing={2}
+        sx={{ margin: "32px 0", overflow: "auto", maxHeight: "100%" }}
+      >
         {todos.map((todo) => (
           <Grid item xs={12} sm={6} md={4} key={todo.id}>
-            <Paper elevation={3} sx={{ padding: "16px", overflow: "auto" }}>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: "16px",
+                overflow: "auto",
+                background: getRandomColor(),
+              }}
+            >
               <Typography variant="h6">{todo.transcript_text}</Typography>
             </Paper>
           </Grid>
@@ -85,12 +118,13 @@ const VoiceNote = () => {
           height: "12.5rem",
           padding: "16px",
           margin: "16px",
+          backgroundColor: "#a1ef48",
         }}
       >
-        <Typography variant="h5" sx={{ color: "green", padding: "1.25rem" }}>
+        <Typography variant="h5" sx={{ padding: "1.25rem" }}>
           Voice Notes:
         </Typography>
-        <Typography variant="body1" sx={{ color: "green", padding: "1.25rem" }}>
+        <Typography variant="body1" sx={{ padding: "1.25rem" }}>
           {transcript}
         </Typography>
       </Paper>

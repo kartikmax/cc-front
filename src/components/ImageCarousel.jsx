@@ -9,6 +9,7 @@ import Venusaur from "../assets/venusaur.jpg";
 import Squirtle from "../assets/squirtle.jpg";
 import Charmaleon from "../assets/charmeleon.jpg";
 
+
 function ImgCard({ image, text, height, width }) {
   return (
     <div className="card" style={{ margin: "20px" }}>
