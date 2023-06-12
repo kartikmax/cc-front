@@ -24,7 +24,7 @@ function Arrow(props) {
 }
 // Rest of the code...
 
-function ImageCarousel({carouselText,cardData}) {
+function ImageCarousel({ carouselText, cardData }) {
   const settings = {
     dots: true,
     infinite: true,
