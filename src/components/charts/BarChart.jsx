@@ -47,7 +47,7 @@ export function BarChart({ allStudentsData }) {
     labels,
     datasets: [
       {
-        label: "Previous Marks",
+        label: "Previous Marks 😊",
         data: allStudentsData.map((student) => student.prevMarks),
         backgroundColor: "rgba(255, 99, 132, 0.8)",
       },
